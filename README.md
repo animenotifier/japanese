@@ -1,0 +1,2 @@
+# japanese
+Japanese tokenizer.
