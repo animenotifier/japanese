@@ -7,11 +7,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/animenotifier/japanese"
+	"github.com/animenotifier/japanese/tokenizer"
 )
 
 func japaneseTokenizer(w http.ResponseWriter, req *http.Request) {
-	data := japanese.Tokenize(strings.TrimPrefix(req.URL.Path, "/"))
+	data := tokenizer.Tokenize(strings.TrimPrefix(req.URL.Path, "/"))
 	buffer, err := json.Marshal(data)
 
 	if err != nil {
