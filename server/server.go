@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"io"
 	"log"
 	"net/http"
@@ -22,7 +23,14 @@ func japaneseTokenizer(w http.ResponseWriter, req *http.Request) {
 	w.Write(buffer)
 }
 
+var port = "8080"
+
+func init() {
+	flag.StringVar(&port, "port", "", "Port the HTTP server should listen on")
+	flag.Parse()
+}
+
 func main() {
 	http.HandleFunc("/", japaneseTokenizer)
-	log.Fatal(http.ListenAndServe(":1337", nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
