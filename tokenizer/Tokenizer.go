@@ -1,8 +1,6 @@
 package tokenizer
 
 import (
-	"strings"
-
 	"github.com/animenotifier/japanese"
 	"github.com/gojp/kana"
 	kagome "github.com/ikawaha/kagome/tokenizer"
@@ -30,9 +28,6 @@ func Tokenize(sentence string) []*japanese.Token {
 			romaji = kana.KanaToRomaji(katakana)
 			hiragana = kana.RomajiToHiragana(romaji)
 		}
-
-		// Add some custom fixes
-		romaji = strings.Replace(romaji, "hu", "fu", -1)
 
 		// Create token
 		token := &japanese.Token{
