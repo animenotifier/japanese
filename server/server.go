@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"io"
 	"log"
@@ -9,11 +8,12 @@ import (
 	"strings"
 
 	"github.com/animenotifier/japanese/tokenizer"
+	jsoniter "github.com/json-iterator/go"
 )
 
 func japaneseTokenizer(w http.ResponseWriter, req *http.Request) {
 	data := tokenizer.Tokenize(strings.TrimPrefix(req.URL.Path, "/"))
-	buffer, err := json.Marshal(data)
+	buffer, err := jsoniter.Marshal(data)
 
 	if err != nil {
 		io.WriteString(w, err.Error())
