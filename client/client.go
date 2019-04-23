@@ -17,7 +17,7 @@ func (tokenizer *Tokenizer) Tokenize(sentence string) []*japanese.Token {
 
 	if len(errs) > 0 {
 		return []*japanese.Token{
-			&japanese.Token{
+			{
 				Original: sentence,
 				Furigana: false,
 			},
