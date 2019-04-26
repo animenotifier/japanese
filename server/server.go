@@ -12,7 +12,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-var port = "8080"
+var port = "6000"
 
 func init() {
 	flag.StringVar(&port, "port", "", "Port the HTTP server should listen on")
