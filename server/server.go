@@ -5,23 +5,12 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/animenotifier/japanese/tokenizer"
 	jsoniter "github.com/json-iterator/go"
 )
-
-func japaneseTokenizer(w http.ResponseWriter, req *http.Request) {
-	data := tokenizer.Tokenize(strings.TrimPrefix(req.URL.Path, "/"))
-	buffer, err := jsoniter.Marshal(data)
-
-	if err != nil {
-		io.WriteString(w, err.Error())
-	}
-
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.Write(buffer)
-}
 
 var port = "8080"
 
@@ -31,6 +20,22 @@ func init() {
 }
 
 func main() {
-	http.HandleFunc("/", japaneseTokenizer)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	http.HandleFunc("/", onRequest)
+	err := http.ListenAndServe(":"+port, nil)
+	log.Fatal(err)
+}
+
+// onRequest will tokenize everything after the slash in the requested path.
+func onRequest(response http.ResponseWriter, request *http.Request) {
+	data := tokenizer.Tokenize(strings.TrimPrefix(request.URL.Path, "/"))
+	buffer, err := jsoniter.Marshal(data)
+
+	if err != nil {
+		io.WriteString(response, err.Error())
+		io.WriteString(os.Stderr, err.Error())
+		return
+	}
+
+	response.Header().Set("Content-Type", "application/json; charset=utf-8")
+	response.Write(buffer)
 }
