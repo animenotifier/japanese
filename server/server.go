@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -12,10 +11,10 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-var port = "6000"
+var port string
 
 func init() {
-	flag.StringVar(&port, "port", "", "Port the HTTP server should listen on")
+	flag.StringVar(&port, "port", "6000", "Port the HTTP server should listen on")
 	flag.Parse()
 }
 
@@ -28,14 +27,12 @@ func main() {
 // onRequest will tokenize everything after the slash in the requested path.
 func onRequest(response http.ResponseWriter, request *http.Request) {
 	data := tokenizer.Tokenize(strings.TrimPrefix(request.URL.Path, "/"))
-	buffer, err := jsoniter.Marshal(data)
+	response.Header().Set("Content-Type", "application/json; charset=utf-8")
+	encoder := jsoniter.NewEncoder(response)
+	err := encoder.Encode(data)
 
 	if err != nil {
-		io.WriteString(response, err.Error())
-		io.WriteString(os.Stderr, err.Error())
+		_, _ = os.Stderr.WriteString(err.Error())
 		return
 	}
-
-	response.Header().Set("Content-Type", "application/json; charset=utf-8")
-	response.Write(buffer)
 }
